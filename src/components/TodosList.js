@@ -6,7 +6,7 @@ export default function TodosList({ isCreated }) {
   const [todos, setTodos] = React.useState([]);
   const fetchTodosData = async () => {
     try {
-      const url = "http://localhost:4000/api/todos/allTodos";
+      const url = "http://localhost:3000/todo";
       const response = await fetch(url, {
         method: "GET",
         mode: "cors",

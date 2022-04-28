@@ -8,21 +8,21 @@ export default function Dialog({ show, setShow, setIsCreated }) {
   const [todo, setTodo] = React.useState({
     todoName: "",
     description: "",
-    userId: "",
+    teamId: "",
   });
-  const [users, setUsers] = React.useState([]);
+  const [teams, setTeams] = React.useState([]);
   const handleClose = () => {
     setTodo(() => ({
-      todoName: "",
+      name: "",
       description: "",
-      userId: "",
+      teamId: "",
     }));
     setShow(false);
   };
   const handleCreateTodo = async () => {
-    if (todo && todo.todoName && todo.description && todo.userId) {
+    if (todo && todo.name && todo.description && todo.teamId) {
       try {
-        const url = "http://localhost:4000/api/todos/addTodo";
+        const url = "http://localhost:3000/todo";
         const params = { ...todo };
         const response = await fetch(url, {
           method: "POST",
@@ -37,9 +37,9 @@ export default function Dialog({ show, setShow, setIsCreated }) {
           setIsCreated((prev) => !prev);
           setShow(false);
           setTodo(() => ({
-            todoName: "",
+            name: "",
             description: "",
-            userId: "",
+            teamId: "",
           }));
         }
       } catch (e) {
@@ -51,9 +51,9 @@ export default function Dialog({ show, setShow, setIsCreated }) {
       console.log("error");
     }
   };
-  const fetchUsersData = async () => {
+  const fetchTeamsData = async () => {
     try {
-      const url = "http://localhost:4000/api/users/allUsers";
+      const url = "http://localhost:3000/team";
       const response = await fetch(url, {
         method: "GET",
         mode: "cors",
@@ -63,7 +63,7 @@ export default function Dialog({ show, setShow, setIsCreated }) {
       });
       const res = await response.json();
       if (res && res.length > 0) {
-        setUsers(() => [...res]);
+        setTeams(() => [...res]);
       }
     } catch (e) {
       console.error(e);
@@ -72,7 +72,7 @@ export default function Dialog({ show, setShow, setIsCreated }) {
     }
   };
   React.useEffect(() => {
-    fetchUsersData();
+    fetchTeamsData();
   }, []);
   return (
     <div>
@@ -92,9 +92,9 @@ export default function Dialog({ show, setShow, setIsCreated }) {
               <Form.Control
                 type="text"
                 placeholder="Todo Name"
-                value={todo.todoName}
+                value={todo.name}
                 onInput={(e) =>
-                  setTodo((prev) => ({ ...prev, todoName: e.target.value }))
+                  setTodo((prev) => ({ ...prev, name: e.target.value }))
                 }
               />
             </Form.Group>
@@ -115,13 +115,13 @@ export default function Dialog({ show, setShow, setIsCreated }) {
               <Form.Label>Assign employee</Form.Label>
               <Form.Select
                 aria-label="Default select example"
-                value={todo.userId}
+                value={todo.teamId}
                 onChange={(e) =>
-                  setTodo((prev) => ({ ...prev, userId: e.target.value }))
+                  setTodo((prev) => ({ ...prev, teamId: e.target.value }))
                 }>
-                <option>Open this select menu</option>
-                {users &&
-                  users.map((ele) => (
+                <option>Select Team</option>
+                {teams &&
+                  teams.map((ele) => (
                     <option key={ele.id} value={ele.id}>
                       {ele.name}
                     </option>
